@@ -1,33 +1,50 @@
 
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { ToastContext } from '../context/ToastContext'
 import { ToastPopup } from './ToastPopup'
 
+
 export const InfoPage = () => {
 
-    const {toast, setToast} = useContext(ToastContext)
+    // const { toast, setToast } = useContext(ToastContext)
 
-    const makePopup = () => {
+    const [toast, setToast] = useState([])
 
-        setToast({ version: 'info', message: 'Info message', popup: true })
-        console.log(toast);
-        const timeout = setTimeout(() => {
-            setToast({ version: 'info', message: 'Info message', popup: false })
-            console.log(toast);
-        }, 3000);
-        return () => {
-            window.clearInterval(timeout);
-        };
+    const [toastId, setToastId] = useState(1)
+
+    const makeToast = (error, msg) => {
+
+        setToastId(toastId + 1)
+
+        const newToast = { error: error + toastId, msg: msg, id: toastId }
+
+        setToast([...toast, newToast])
+        
+    }
+
+    const removeToast = (id) => {
+        setToast(toast.filter(item => item.id !== id));
     }
 
     return (
         <>
 
-        <h1>Click button for info toast</h1>
+            <h1>Click button for Info toast</h1>
 
-        <button onClick={() => makePopup()}>Info</button>
-        
-        <ToastPopup />
+            <button onClick={() => { makeToast('Info', 'Info message'), console.log(toast); }}>Info</button>
+
+            <div>
+                {toast.map(item => {
+                    return (
+                        <div key={item.id} style={{margin: '8px 0'}}>
+                            <div>{item.error}</div>
+                            <div onClick={() => removeToast(item.id)}> REMOVE</div>
+                        </div>
+                    )
+                })
+
+                }
+            </div>
 
         </>
     )

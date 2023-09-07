@@ -4,7 +4,7 @@ export const ToastContext = createContext(null)
 
 export const ToastContextProvider = ({children}) => {
 
-    const [toast, setToast] = useState({version: 'success', message: 'Success message', popup: false})
+    const [toast, setToast] = useState([])
 
     return (
         <>
